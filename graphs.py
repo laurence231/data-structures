@@ -8,7 +8,8 @@ class Graph:
         return self.nodes
 
     def getEdges(self):
-        print(self.edges)
+        for node in self.edges:
+            print(node, self.edges[node])
         return self.edges
 
     def addNode(self, node_name):
@@ -18,9 +19,9 @@ class Graph:
         if node_1 and node_2 in self.getNodes():
             self.edges[(node_1, node_2)] = weight
         else:
-            print("invalid nodes!")
+            print("INVALID NODES! try again")
 
-    def visualiseGraph(self):
+    def visualiseNodes(self):
         for node_tuple in self.edges:
             print(node_tuple[0], "-"*5,self.edges[node_tuple],"-"*5, node_tuple[1])
 
@@ -29,10 +30,19 @@ class Graph:
 
 if __name__ == "__main__":
     graph_test = Graph()
-    graph_test.addNode("A")
-    graph_test.addNode("B")
-    graph_test.getNodes()
-    graph_test.addEdge("A", "B", 0.5)
-    graph_test.getEdges()
-    graph_test.addEdge("A", "D", 0.1)
-    graph_test.visualiseGraph()
+    while True:
+        user_input = input("add a NEW NODE (enter 1) or add a WEIGHTED EDGE (enter 2)??: ", )
+        if user_input == 1:
+            node_name = raw_input("what is the name for this node? (enter inbetween ""): ", )
+            graph_test.addNode(node_name)
+            graph_test.getNodes()
+            graph_test.visualiseNodes()
+        if user_input == 2:
+            node_1 = raw_input("What is the origin node?: ", )
+            node_2 = raw_input("What is the destination node?: ", )
+            weighting = input("Enter the weighting you require: ", )
+            graph_test.addEdge(node_1, node_2, weighting)
+            graph_test.getEdges()
+            graph_test.visualiseNodes()
+        else:
+            print('Didnt recognise your input! try again')
