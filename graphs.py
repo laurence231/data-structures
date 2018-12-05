@@ -24,25 +24,31 @@ class Graph:
         for node_pair in self.edges:
             print(node_pair[0], "-"*5,self.edges[node_pair],"-"*5, node_pair[1])
 
-    def Dijkstra_algorithm(self):
+    def Dijkstra_algorithm(self, starting_node):
 
-        possible_routes = {}
-
-        def possibleEdges(self, origin_node, possible_routes):
+        def possibleEdges(origin_node, possible_routes):
             for node_pair in self.edges:
                 if node_pair[0] == origin_node:   #if the origin node is the origin in the dictionary of node-edge pairs
                     weight = self.edges[node_pair]
                     possible_routes[node_pair] = weight
-            return possible_routes
+            if possible_routes:
+                print('here are poss routes ', possible_routes)
+                traverseMinEdge(possible_routes)
 
-        def traverseMinEdge(self, possible_routes):
-            print(possible_routes)
+        def traverseMinEdge(possible_routes):
+            print(possible_routes, 'here are the possible routes!')
             key_min = min(possible_routes, key=(lambda k: possible_routes[k]))
             print(key_min, 'THIS IS THE EDGE CHOSEN')
             new_origin_node = key_min[1]
             possible_routes.pop(key_min)
-            print(possible_routes)
-            self.possibleEdges(new_origin_node)
+            route_taken.append(key_min)
+            possibleEdges(new_origin_node, possible_routes)
+
+        route_taken = []
+        possible_routes = {}
+        possibleEdges(starting_node, possible_routes)
+        print(route_taken)
+
 
 
 
@@ -65,8 +71,7 @@ if __name__ == "__main__":
     graph_test.addEdge("B", "C", 4)
     graph_test.addEdge("A", "C", 100)
     graph_test.getEdges()
-    poss_route = graph_test.possibleEdges("A")
-    graph_test.traverseMinEdge(poss_route)
+    graph_test.Dijkstra_algorithm("A")
 
     # graph_test = Graph()
     # while True:
