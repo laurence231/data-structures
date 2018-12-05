@@ -50,18 +50,6 @@ class Graph:
         print(route_taken)
 
 
-
-
-        # weight = self.edges[node_pair]
-        # weight_sum += weight
-        # destination_node = node_pair[1]
-        # print('destination_node: ', destination_node, 'weight: ', weight)
-        # print('weight sum: ', weight_sum, 'path followed: ', path_followed)
-        # path_followed.append(node_pair)
-        # origin_node = destination_node
-        # # self.traverseEdge(origin_node, weight_sum, node_pair)
-
-
 if __name__ == "__main__":
     graph_test = Graph()
     graph_test.addNode("A")
@@ -73,6 +61,13 @@ if __name__ == "__main__":
     graph_test.getEdges()
     graph_test.Dijkstra_algorithm("A")
 
+
+    #########################################################
+    #
+    #    Here is the  very primitive attempt at interaction
+    #
+    ##########################################################
+    #
     # graph_test = Graph()
     # while True:
     #     user_input = input("add a NEW NODE (enter 1) or add a WEIGHTED EDGE (enter 2)??: ", )
