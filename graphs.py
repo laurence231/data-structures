@@ -1,3 +1,5 @@
+from graphviz import Digraph
+
 class Graph:
     def __init__(self, nodes=[], edges={}):
         self.nodes = nodes
@@ -6,6 +8,11 @@ class Graph:
     def getNodes(self):
         print(self.nodes)
         return self.nodes
+
+    def getNodesCOPY(self):
+        nodes_copy = self.nodes
+        return nodes_copy
+
 
     def getEdges(self):
         print(self.edges)
@@ -21,29 +28,47 @@ class Graph:
             print("INVALID NODES! try again")
 
     def visualiseNodes(self):
-        for node_pair in self.edges:
-            print(node_pair[0], "-"*5,self.edges[node_pair],"-"*5, node_pair[1])
+        dot = Digraph(comment='test of a graph using graphviz')
+        for node_name in self.nodes:
+            dot.node(node_name)
+        print(self.edges)
+        edges = []
+        for edge in self.edges:
+            edges.append(edge[0]+edge[1])
+        dot.edges(edges)
+        print(dot.source)
+        dot.render('test-output/round-table.gv', view=True)
 
     def Dijkstra_algorithm(self, starting_node):
 
         def possibleEdges(origin_node, possible_routes):
             for node_pair in self.edges:
-                if node_pair[0] == origin_node:   #if the origin node is the origin in the dictionary of node-edge pairs
+                # print(node_pair[1], 'not in ', traversed, node_pair[1] not in traversed)
+                if node_pair[0] in origin_node:   #if the origin node is the origin in the dictionary of node-edge pairs
                     weight = self.edges[node_pair]
                     possible_routes[node_pair] = weight
-            if possible_routes:
+            if possible_routes and node_pair[1] not in traversed:
                 print('here are poss routes ', possible_routes)
-                traverseMinEdge(possible_routes)
+                traverseMinEdge(origin_node,possible_routes)
+            else:
+                print(self.nodes)
+                print(traversed)
 
-        def traverseMinEdge(possible_routes):
+        def traverseMinEdge(origin_node, possible_routes):
             print(possible_routes, 'here are the possible routes!')
             key_min = min(possible_routes, key=(lambda k: possible_routes[k]))
             print(key_min, 'THIS IS THE EDGE CHOSEN')
-            new_origin_node = key_min[1]
+            weight_of_min_edge = possible_routes[key_min]
+            total_weight.append(weight_of_min_edge)
+            origin_node.append(key_min[1])
+            traversed.append(key_min[1])
+            print(traversed, 'Traversed')
             possible_routes.pop(key_min)
             route_taken.append(key_min)
-            possibleEdges(new_origin_node, possible_routes)
+            possibleEdges(origin_node, possible_routes)
 
+        traversed = [starting_node]
+        total_weight = []
         route_taken = []
         possible_routes = {}
         possibleEdges(starting_node, possible_routes)
@@ -57,9 +82,9 @@ if __name__ == "__main__":
     graph_test.addNode("C")
     graph_test.addEdge("A", "B", 3)
     graph_test.addEdge("B", "C", 4)
-    graph_test.addEdge("A", "C", 100)
+    graph_test.addEdge("A", "C", 1)
     graph_test.getEdges()
-    graph_test.Dijkstra_algorithm("A")
+    graph_test.visualiseNodes()
 
 
     #########################################################
