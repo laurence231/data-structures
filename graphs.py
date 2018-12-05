@@ -24,18 +24,25 @@ class Graph:
         for node_pair in self.edges:
             print(node_pair[0], "-"*5,self.edges[node_pair],"-"*5, node_pair[1])
 
-    def possibleEdges(self, origin_node):
-        possible_routes = {}
-        for node_pair in self.edges:
-            if node_pair[0] == origin_node:   #if the origin node is the origin in the dictionary of node-edge pairs
-                weight = self.edges[node_pair]
-                possible_routes[node_pair] = weight
-        return possible_routes
+    def Dijkstra_algorithm(self):
 
-    def traverseMinEdge(self, possible_routes):
-        print(possible_routes)
-        key_min = min(possible_routes, key=(lambda k: possible_routes[k]))
-        print(key_min)
+        possible_routes = {}
+
+        def possibleEdges(self, origin_node, possible_routes):
+            for node_pair in self.edges:
+                if node_pair[0] == origin_node:   #if the origin node is the origin in the dictionary of node-edge pairs
+                    weight = self.edges[node_pair]
+                    possible_routes[node_pair] = weight
+            return possible_routes
+
+        def traverseMinEdge(self, possible_routes):
+            print(possible_routes)
+            key_min = min(possible_routes, key=(lambda k: possible_routes[k]))
+            print(key_min, 'THIS IS THE EDGE CHOSEN')
+            new_origin_node = key_min[1]
+            possible_routes.pop(key_min)
+            print(possible_routes)
+            self.possibleEdges(new_origin_node)
 
 
 
