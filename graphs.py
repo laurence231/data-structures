@@ -46,7 +46,7 @@ class Graph:
                 if node_pair[0] in traversed and node_pair[1] not in traversed:
                     weight = self.edges[node_pair]
                     possible_routes[node_pair] = weight
-            print('here are poss routes ', possible_routes)
+            print('here are the possible routes to choose from', possible_routes)
             if sorted(traversed) != sorted(self.nodes):
                 traverseMinEdge(origin_node,possible_routes)
             else:
@@ -54,7 +54,9 @@ class Graph:
                 print(traversed, 'Here is the order of nodes traversed')
 
         def traverseMinEdge(origin_node, possible_routes):
-            key_min = min(possible_routes, key=(lambda k: possible_routes[k]))
+            print(possible_routes)
+            key_min = min(possible_routes, key=possible_routes.get)
+            print(key_min, 'this is the minimum key')
             if key_min[1] not in traversed:
                 weight_of_min_edge = possible_routes[key_min]
                 print(key_min, 'THIS IS THE EDGE CHOSEN, with weight', weight_of_min_edge)
@@ -80,6 +82,7 @@ class Graph:
         print(route_taken, 'This is the route taken by Dijkstra\'s algorithm')
         return route_taken
 
+
 def parseInput(answer, graph):
     '''
     Converts input from UI into graph operation
@@ -94,7 +97,7 @@ def parseInput(answer, graph):
         elif list(answer.values())[0][0] == 'Create new weighted edge':
             edge_1 = input('First node: ' )
             edge_2 = input('Second node: ' )
-            weight = input('What is the weight on this edge?: ')
+            weight = int(input('What is the weight on this edge?: '))
             graph.addEdge(edge_1, edge_2, weight)
         elif list(answer.values())[0][0] == 'Visualise the graph':
             graph.visualiseNodes()
