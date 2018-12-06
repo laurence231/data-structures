@@ -1,6 +1,5 @@
 from graphviz import Digraph
 from PyInquirer import prompt,style_from_dict, Token, Separator
-from pprint import pprint
 
 class Graph:
     def __init__(self, nodes=[], edges={}):
@@ -45,46 +44,83 @@ class Graph:
 
         def possibleEdges(origin_node, possible_routes):
             for node_pair in self.edges:
-                # print(node_pair[1], 'not in ', traversed, node_pair[1] not in traversed)
-                if node_pair[0] in origin_node:   #if the origin node is the origin in the dictionary of node-edge pairs
+                if node_pair[0] in traversed and node_pair[1] not in traversed:   #if the origin node is the origin in the dictionary of node-edge pairs
                     weight = self.edges[node_pair]
                     possible_routes[node_pair] = weight
-            if possible_routes and node_pair[1] not in traversed:
-                print('here are poss routes ', possible_routes)
+                    print('here are poss routes ', possible_routes)
+                    print(node_pair[1], 'not in ', traversed, node_pair[1] not in traversed)
+
+            if sorted(traversed) != sorted(self.nodes):
                 traverseMinEdge(origin_node,possible_routes)
             else:
                 print(self.nodes)
-                print(traversed)
+                print(traversed, 'Here is the order of nodes traversed')
+                print("finished!")
 
         def traverseMinEdge(origin_node, possible_routes):
             print(possible_routes, 'here are the possible routes!')
             key_min = min(possible_routes, key=(lambda k: possible_routes[k]))
-            print(key_min, 'THIS IS THE EDGE CHOSEN')
-            weight_of_min_edge = possible_routes[key_min]
-            total_weight.append(weight_of_min_edge)
-            origin_node.append(key_min[1])
-            traversed.append(key_min[1])
-            print(traversed, 'Traversed')
-            possible_routes.pop(key_min)
-            route_taken.append(key_min)
-            possibleEdges(origin_node, possible_routes)
+            if key_min[1] not in traversed:
+                print(key_min, 'THIS IS THE EDGE CHOSEN')
+                weight_of_min_edge = possible_routes[key_min]
+                total_weight.append(weight_of_min_edge)
+                origin_node.append(key_min[1])
+                traversed.append(key_min[1])
+                print(traversed, 'Traversed')
+                possible_routes.pop(key_min)
+                route_taken.append(key_min)
+                possible_routes = {}
+                possibleEdges(origin_node, possible_routes)
+            else:
+                print('we have a problem!')
+                quit()
 
+
+        origin_node = [starting_node]
         traversed = [starting_node]
         total_weight = []
         route_taken = []
         possible_routes = {}
-        possibleEdges(starting_node, possible_routes)
-        print(route_taken)
+        possibleEdges(origin_node, possible_routes)
+        print(route_taken, 'This is the route taken by Dijkstra\'s algorithm')
 
 
-if __name__ == "__main__":
 
+def parseInput(answer, graph):
+    '''
+    Converts input from UI into graph operation
+    :param answer: The dictionary with the chosen graph operation from the UI
+    :param graph: the created graph (object) upon which to operate
+    :return:
+    '''
+    if list(answer.values())[0][0] == 'Create a new node':
+        node_name = input('What do you want to call this new node?: ',)
+        graph.addNode(node_name)
+    elif list(answer.values())[0][0] == 'Create new weighted edge':
+        edge_1 = input('First node: ' )
+        edge_2 = input('Second node: ' )
+        weight = input('What is the weight on this edge?: ')
+        graph.addEdge(edge_1, edge_2, weight)
+    elif list(answer.values())[0][0] == 'Visualise the graph':
+        graph.visualiseNodes()
+    elif list(answer.values())[0][0] == 'Apply Dijkstra\'s algorithm':
+        start_node = input('What starting node would you like?: ' ,)
+        graph.Dijkstra_algorithm(start_node)
+    elif list(answer.values())[0][0] == 'quit':
+        quit()
+
+
+def userInterface():
+    '''
+    Uses PyInquirer to create a interactive UI
+    :return: dictionary with chosen graph operation
+    '''
     style = style_from_dict({
         Token.Separator: '#cc5454',
         Token.QuestionMark: '#673ab7 bold',
-        Token.Selected: '#cc5454',  # default
+        Token.Selected: '#cc5454',
         Token.Pointer: '#673ab7 bold',
-        Token.Instruction: '',  # default
+        Token.Instruction: '',
         Token.Answer: '#f44336 bold',
         Token.Question: '',
     })
@@ -107,51 +143,57 @@ if __name__ == "__main__":
                 },
                 {
                     'name': 'Apply Dijkstra\'s algorithm'
+                },
+                {
+                    'name': 'quit'
                 }
             ],
             'validate': lambda answer: 'You must choose one option at a time only.' \
                 if len(answer) != 1 else True
         }
     ]
-
     answers = prompt(questions, style=style)
-    # pprint(answers)
-    print(type(answers))
     if len(answers) == 1:
-        parse_input(write the function)
+        return answers
     else:
         print('you must only select one option.')
-    # graph_test = Graph()
-    # graph_test.addNode("A")
-    # graph_test.addNode("B")
-    # graph_test.addNode("C")
-    # graph_test.addEdge("A", "B", 3)
-    # graph_test.addEdge("B", "C", 4)
-    # graph_test.addEdge("A", "C", 1)
-    # graph_test.getEdges()
-    # graph_test.visualiseNodes()
 
 
-    #########################################################
-    #
-    #    Here is the  very primitive attempt at interaction
-    #
-    ##########################################################
-    #
-    # graph_test = Graph()
-    # while True:
-    #     user_input = input("add a NEW NODE (enter 1) or add a WEIGHTED EDGE (enter 2)??: ", )
-    #     if user_input == 1:
-    #         node_name = raw_input("what is the name for this node? (enter inbetween ""): ", )
-    #         graph_test.addNode(node_name)
-    #         graph_test.getNodes()
-    #         graph_test.visualiseNodes()
-    #     if user_input == 2:
-    #         node_1 = raw_input("What is the origin node?: ", )
-    #         node_2 = raw_input("What is the destination node?: ", )
-    #         weighting = input("Enter the weighting you require: ", )
-    #         graph_test.addEdge(node_1, node_2, weighting)
-    #         graph_test.getEdges()
-    #         graph_test.visualiseNodes()
-    #     else:
-    #         print('Didnt recognise your input! try again')
+
+if __name__ == "__main__":
+    graph_test = Graph()
+
+    graph_test.addNode("A")
+    graph_test.addNode("B")
+    graph_test.addNode("C")
+    graph_test.addNode("D")
+    graph_test.addNode("E")
+
+    graph_test.addEdge("A", "B", 4)
+    graph_test.addEdge("A", "C", 2)
+
+    graph_test.addEdge("B", "C", 3)
+    graph_test.addEdge("C", "B", 1)
+
+    graph_test.addEdge("B", "D", 2)
+    graph_test.addEdge("B", "E", 3)
+
+    graph_test.addEdge("C", "D", 4)
+    graph_test.addEdge("C", "E", 5)
+    graph_test.addEdge("E", "D", 1)
+
+    graph_test.Dijkstra_algorithm("A")
+
+
+
+
+
+
+# ###############
+# # FOR UI functionality
+# #########
+# if __name__ == "__main__":
+#     graph_test = Graph()
+#     while True:
+#         answers = userInterface()
+#         parseInput(answers, graph_test)
