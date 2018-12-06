@@ -14,7 +14,6 @@ class Graph:
         nodes_copy = self.nodes
         return nodes_copy
 
-
     def getEdges(self):
         print(self.edges)
         return self.edges
@@ -44,25 +43,21 @@ class Graph:
 
         def possibleEdges(origin_node, possible_routes):
             for node_pair in self.edges:
-                if node_pair[0] in traversed and node_pair[1] not in traversed:   #if the origin node is the origin in the dictionary of node-edge pairs
+                if node_pair[0] in traversed and node_pair[1] not in traversed:
                     weight = self.edges[node_pair]
                     possible_routes[node_pair] = weight
-                    print('here are poss routes ', possible_routes)
-                    print(node_pair[1], 'not in ', traversed, node_pair[1] not in traversed)
-
+            print('here are poss routes ', possible_routes)
             if sorted(traversed) != sorted(self.nodes):
                 traverseMinEdge(origin_node,possible_routes)
             else:
                 print(self.nodes)
                 print(traversed, 'Here is the order of nodes traversed')
-                print("finished!")
 
         def traverseMinEdge(origin_node, possible_routes):
-            print(possible_routes, 'here are the possible routes!')
             key_min = min(possible_routes, key=(lambda k: possible_routes[k]))
             if key_min[1] not in traversed:
-                print(key_min, 'THIS IS THE EDGE CHOSEN')
                 weight_of_min_edge = possible_routes[key_min]
+                print(key_min, 'THIS IS THE EDGE CHOSEN, with weight', weight_of_min_edge)
                 total_weight.append(weight_of_min_edge)
                 origin_node.append(key_min[1])
                 traversed.append(key_min[1])
@@ -83,8 +78,7 @@ class Graph:
         possible_routes = {}
         possibleEdges(origin_node, possible_routes)
         print(route_taken, 'This is the route taken by Dijkstra\'s algorithm')
-
-
+        return route_taken
 
 def parseInput(answer, graph):
     '''
@@ -93,22 +87,24 @@ def parseInput(answer, graph):
     :param graph: the created graph (object) upon which to operate
     :return:
     '''
-    if list(answer.values())[0][0] == 'Create a new node':
-        node_name = input('What do you want to call this new node?: ',)
-        graph.addNode(node_name)
-    elif list(answer.values())[0][0] == 'Create new weighted edge':
-        edge_1 = input('First node: ' )
-        edge_2 = input('Second node: ' )
-        weight = input('What is the weight on this edge?: ')
-        graph.addEdge(edge_1, edge_2, weight)
-    elif list(answer.values())[0][0] == 'Visualise the graph':
-        graph.visualiseNodes()
-    elif list(answer.values())[0][0] == 'Apply Dijkstra\'s algorithm':
-        start_node = input('What starting node would you like?: ' ,)
-        graph.Dijkstra_algorithm(start_node)
-    elif list(answer.values())[0][0] == 'quit':
-        quit()
-
+    if answer != {'Graph Building': []}:
+        if list(answer.values())[0][0] == 'Create a new node':
+            node_name = input('What do you want to call this new node?: ',)
+            graph.addNode(node_name)
+        elif list(answer.values())[0][0] == 'Create new weighted edge':
+            edge_1 = input('First node: ' )
+            edge_2 = input('Second node: ' )
+            weight = input('What is the weight on this edge?: ')
+            graph.addEdge(edge_1, edge_2, weight)
+        elif list(answer.values())[0][0] == 'Visualise the graph':
+            graph.visualiseNodes()
+        elif list(answer.values())[0][0] == 'Apply Dijkstra\'s algorithm':
+            start_node = input('What starting node would you like?: ' ,)
+            graph.Dijkstra_algorithm(start_node)
+        elif list(answer.values())[0][0] == 'quit':
+            quit()
+    else:
+        print('You need to select an answer!')
 
 def userInterface():
     '''
@@ -148,8 +144,6 @@ def userInterface():
                     'name': 'quit'
                 }
             ],
-            'validate': lambda answer: 'You must choose one option at a time only.' \
-                if len(answer) != 1 else True
         }
     ]
     answers = prompt(questions, style=style)
@@ -158,42 +152,11 @@ def userInterface():
     else:
         print('you must only select one option.')
 
-
-
+###############
+# FOR UI functionality
+#########
 if __name__ == "__main__":
     graph_test = Graph()
-
-    graph_test.addNode("A")
-    graph_test.addNode("B")
-    graph_test.addNode("C")
-    graph_test.addNode("D")
-    graph_test.addNode("E")
-
-    graph_test.addEdge("A", "B", 4)
-    graph_test.addEdge("A", "C", 2)
-
-    graph_test.addEdge("B", "C", 3)
-    graph_test.addEdge("C", "B", 1)
-
-    graph_test.addEdge("B", "D", 2)
-    graph_test.addEdge("B", "E", 3)
-
-    graph_test.addEdge("C", "D", 4)
-    graph_test.addEdge("C", "E", 5)
-    graph_test.addEdge("E", "D", 1)
-
-    graph_test.Dijkstra_algorithm("A")
-
-
-
-
-
-
-# ###############
-# # FOR UI functionality
-# #########
-# if __name__ == "__main__":
-#     graph_test = Graph()
-#     while True:
-#         answers = userInterface()
-#         parseInput(answers, graph_test)
+    while True:
+        answers = userInterface()
+        parseInput(answers, graph_test)
