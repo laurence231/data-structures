@@ -1,4 +1,6 @@
 from graphviz import Digraph
+from PyInquirer import prompt,style_from_dict, Token, Separator
+from pprint import pprint
 
 class Graph:
     def __init__(self, nodes=[], edges={}):
@@ -37,7 +39,7 @@ class Graph:
             edges.append(edge[0]+edge[1])
         dot.edges(edges)
         print(dot.source)
-        dot.render('test-output/round-table.gv', view=True)
+        dot.render('test-output/visualisation.gv', view=True)
 
     def Dijkstra_algorithm(self, starting_node):
 
@@ -76,15 +78,58 @@ class Graph:
 
 
 if __name__ == "__main__":
-    graph_test = Graph()
-    graph_test.addNode("A")
-    graph_test.addNode("B")
-    graph_test.addNode("C")
-    graph_test.addEdge("A", "B", 3)
-    graph_test.addEdge("B", "C", 4)
-    graph_test.addEdge("A", "C", 1)
-    graph_test.getEdges()
-    graph_test.visualiseNodes()
+
+    style = style_from_dict({
+        Token.Separator: '#cc5454',
+        Token.QuestionMark: '#673ab7 bold',
+        Token.Selected: '#cc5454',  # default
+        Token.Pointer: '#673ab7 bold',
+        Token.Instruction: '',  # default
+        Token.Answer: '#f44336 bold',
+        Token.Question: '',
+    })
+
+    questions = [
+        {
+            'type': 'checkbox',
+            'message': 'Select Operation',
+            'name': 'Graph Building',
+            'choices': [
+                # Separator('= The Meats ='),
+                {
+                    'name': 'Create a new node'
+                },
+                {
+                    'name': 'Create new weighted edge'
+                },
+                {
+                    'name': 'Visualise the graph'
+                },
+                {
+                    'name': 'Apply Dijkstra\'s algorithm'
+                }
+            ],
+            'validate': lambda answer: 'You must choose one option at a time only.' \
+                if len(answer) != 1 else True
+        }
+    ]
+
+    answers = prompt(questions, style=style)
+    # pprint(answers)
+    print(type(answers))
+    if len(answers) == 1:
+        parse_input(write the function)
+    else:
+        print('you must only select one option.')
+    # graph_test = Graph()
+    # graph_test.addNode("A")
+    # graph_test.addNode("B")
+    # graph_test.addNode("C")
+    # graph_test.addEdge("A", "B", 3)
+    # graph_test.addEdge("B", "C", 4)
+    # graph_test.addEdge("A", "C", 1)
+    # graph_test.getEdges()
+    # graph_test.visualiseNodes()
 
 
     #########################################################
