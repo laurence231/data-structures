@@ -1,5 +1,6 @@
 from graphviz import Digraph
 from PyInquirer import prompt,style_from_dict, Token, Separator
+import math
 
 class Graph:
     def __init__(self, nodes=[], edges={}):
@@ -41,46 +42,65 @@ class Graph:
 
     def Dijkstra_algorithm(self, starting_node):
 
-        def possibleEdges(origin_node, possible_routes):
+        distance_to_node = {}
+        for node in self.nodes:
+            distance_to_node[node] = math.inf
+        distance_to_node[starting_node] = 0
+
+        def possibleEdges(origin_node, distance_to_node)
             for node_pair in self.edges:
                 if node_pair[0] in traversed and node_pair[1] not in traversed:
                     weight = self.edges[node_pair]
-                    possible_routes[node_pair] = weight
-            print('here are the possible routes to choose from', possible_routes)
+                    if weight < distance_to_node[node_pair[1]]:
+                        distance_to_node[node_pair[1]] = weight
+            print('here are the updated distances: ', distance_to_node)
             if sorted(traversed) != sorted(self.nodes):
-                traverseMinEdge(origin_node,possible_routes)
+                traverseMinEdge(origin_node, distance_to_node)
             else:
-                print(self.nodes)
-                print(traversed, 'Here is the order of nodes traversed')
+                print(traversed, ' we are done traversing. Here are the distances: ', distance_to_node)
 
-        def traverseMinEdge(origin_node, possible_routes):
-            print(possible_routes)
-            key_min = min(possible_routes, key=possible_routes.get)
-            print(key_min, 'this is the minimum key')
-            if key_min[1] not in traversed:
-                weight_of_min_edge = possible_routes[key_min]
-                print(key_min, 'THIS IS THE EDGE CHOSEN, with weight', weight_of_min_edge)
-                total_weight.append(weight_of_min_edge)
-                origin_node.append(key_min[1])
-                traversed.append(key_min[1])
-                print(traversed, 'Traversed')
-                possible_routes.pop(key_min)
-                route_taken.append(key_min)
-                possible_routes = {}
-                possibleEdges(origin_node, possible_routes)
-            else:
-                print('we have a problem!')
-                quit()
+        def traverseMinEdge(origin_node, distance_to_node):
 
 
-        origin_node = [starting_node]
-        traversed = [starting_node]
-        total_weight = []
-        route_taken = []
-        possible_routes = {}
-        possibleEdges(origin_node, possible_routes)
-        print(route_taken, 'This is the route taken by Dijkstra\'s algorithm')
-        return route_taken
+        # def possibleEdges(origin_node, possible_routes):
+        #     for node_pair in self.edges:
+        #         if node_pair[0] in traversed and node_pair[1] not in traversed:
+        #             weight = self.edges[node_pair]
+        #             possible_routes[node_pair] = weight
+        #     print('here are the possible routes to choose from', possible_routes)
+        #     if sorted(traversed) != sorted(self.nodes):
+        #         traverseMinEdge(origin_node,possible_routes)
+        #     else:
+        #         print(self.nodes)
+        #         print(traversed, 'Here is the order of nodes traversed')
+        #
+        # def traverseMinEdge(origin_node, possible_routes):
+        #     print(possible_routes)
+        #     key_min = min(possible_routes, key=possible_routes.get)
+        #     print(key_min, 'this is the minimum key')
+        #     if key_min[1] not in traversed:
+        #         weight_of_min_edge = possible_routes[key_min]
+        #         print(key_min, 'THIS IS THE EDGE CHOSEN, with weight', weight_of_min_edge)
+        #         total_weight.append(weight_of_min_edge)
+        #         origin_node.append(key_min[1])
+        #         traversed.append(key_min[1])
+        #         print(traversed, 'Traversed')
+        #         possible_routes.pop(key_min)
+        #         route_taken.append(key_min)
+        #         possible_routes = {}
+        #         possibleEdges(origin_node, possible_routes)
+        #     else:
+        #         print('we have a problem!')
+        #         quit()
+        #
+        # origin_node = [starting_node]
+        # traversed = [starting_node]
+        # total_weight = []
+        # route_taken = []
+        # possible_routes = {}
+        # possibleEdges(origin_node, possible_routes)
+        # print(route_taken, 'This is the route taken by Dijkstra\'s algorithm')
+        # return route_taken
 
 
 def parseInput(answer, graph):
