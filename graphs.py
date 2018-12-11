@@ -51,6 +51,7 @@ class Graph:
         for edge in self.edges:
             print(edge[0], 'edges', edge[1])
             edges.append(edge[0]+edge[1])
+        print("NOTE: THIS visualisation will only work for if every node name is a single letter e.g. \"A\"")
         dot.edges(edges)
         print(dot.source)
         dot.render('test-output/visualisation.gv', view=True)
@@ -200,7 +201,7 @@ def parseInput(answer, graph):
     if answer != {'Graph Building': []}:
         option_selected = list(answer.values())[0][0]
         if option_selected == 'Create a new node':
-            node_name = input('What do you want to call this new node? (must be single letter for now!): ',)
+            node_name = input('What do you want to call this new node? (NOTE: must be single letter for now, if you want to use visualisation tool!): ',)
             graph.addNode(node_name)
         elif option_selected == 'Create new reversible weighted edge':
             edge_1 = input('First node: ' )
