@@ -2,7 +2,9 @@ from graphviz import Digraph
 from PyInquirer import prompt,style_from_dict, Token, Separator
 import math
 
+
 class Graph:
+
     def __init__(self, nodes=[], edges={}):
         self.nodes = nodes
         self.edges = edges
@@ -47,6 +49,7 @@ class Graph:
         print(self.edges)
         edges = []
         for edge in self.edges:
+            print(edge[0], 'edges', edge[1])
             edges.append(edge[0]+edge[1])
         dot.edges(edges)
         print(dot.source)
@@ -59,10 +62,10 @@ class Graph:
 
         def possibleEdges(distance_to_node):
             '''
-            This function returns a dictionary of available paths to take (possible_routes) with the key of the edge, and a corresponding
-            value being the weight of the edge.
-            Takes input of possible routes (does it need this?) and a dictionary of the distance_to_node (dictionary of total weight to reach
-            output node from input node
+            This function returns a dictionary of available paths to take (possible_routes) with the key of the edge,
+            and a corresponding value being the weight of the edge.
+            Takes input of possible routes (does it need this?) and a dictionary of the distance_to_node
+            (dictionary of total weight to reach output node from input node)
             '''
             possible_routes = {}
             for node_pair in self.edges:
@@ -78,13 +81,15 @@ class Graph:
                 traverseMinEdge(possible_routes, distance_to_node)
             else:
                 print(' ')
-                print(traversed, ' we are done traversing. Here are the distances to any node from selected starting node, according to Dijkstra\'s algorithm: ', distance_to_node)
+                print(traversed, ' we are done traversing. Here are the distances to any node from selected starting '
+                                 'node, according to Dijkstra\'s algorithm: ', distance_to_node)
                 print(' ')
+
         def traverseMinEdge(possible_routes, distance_to_node):
             '''
-            This function requires a dictionary of possible routes. It will pick the minimum route, traverse that route, then add
-            the current traversed node to the list of viable starting points, which is used to build the possible_routes dictionary
-            in possibleEdges().
+            This function requires a dictionary of possible routes. It will pick the minimum route, traverse that route,
+            then add the current traversed node to the list of viable starting points, which is used to build the
+            possible_routes dictionary in possibleEdges().
             '''
             if len(possible_routes) != 0:
                 print(possible_routes, ' are the possible routes')
@@ -110,7 +115,6 @@ class Graph:
         traversed = [starting_node]
         possibleEdges(distance_to_node)
         return distance_to_node
-
 
     def travellingSalesmanNN(self, starting_node):
         '''
@@ -141,7 +145,6 @@ class Graph:
                 current_city_index = traversed.index(current_city)
                 print('We are currently at current city: ', current_city)
                 weight = self.edges[(traversed[current_city_index - 1], current_city)]
-                print(weight)
                 total_weight.append(weight)
                 route_taken.append((current_city, traversed[current_city_index-1]))
                 possibleEdges(traversed, traversed[current_city_index-1])
@@ -176,15 +179,15 @@ class Graph:
             else:
                 print('we have a problem!')
                 quit()
-
         traversed = [starting_node]
         total_weight = []
         route_taken = []
         possibleEdges(traversed, starting_node)
         print(' ')
-        print(route_taken, 'This is the route taken by the Travelling Salesman using the nearest neighbours algorithm, with total accumulated weight of: ', sum(total_weight))
+        print(route_taken, 'This is the route taken by the Travelling Salesman using the nearest neighbours algorithm, '
+                           'with total accumulated weight of: ', sum(total_weight))
         print(' ')
-        return route_taken
+        return route_taken, sum(total_weight)
 
 
 def parseInput(answer, graph):
@@ -197,7 +200,7 @@ def parseInput(answer, graph):
     if answer != {'Graph Building': []}:
         option_selected = list(answer.values())[0][0]
         if option_selected == 'Create a new node':
-            node_name = input('What do you want to call this new node?: ',)
+            node_name = input('What do you want to call this new node? (must be single letter for now!): ',)
             graph.addNode(node_name)
         elif option_selected == 'Create new reversible weighted edge':
             edge_1 = input('First node: ' )
@@ -220,7 +223,9 @@ def parseInput(answer, graph):
         elif option_selected == 'quit':
             quit()
     else:
+        print(' ')
         print('You need to select an answer!')
+        print(' ')
 
 def userInterface():
     '''
@@ -243,7 +248,6 @@ def userInterface():
             'message': 'Select Operation',
             'name': 'Graph Building',
             'choices': [
-                # Separator('= The Meats ='),
                 {
                     'name': 'Create a new node'
                 },
